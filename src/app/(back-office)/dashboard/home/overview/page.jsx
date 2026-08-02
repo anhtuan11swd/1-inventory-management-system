@@ -1,3 +1,5 @@
+import SalesOverview from "@/components/dashboard/SalesOverview";
+
 export default function OverviewPage() {
   return (
     <div>
@@ -5,6 +7,9 @@ export default function OverviewPage() {
       <p className="mt-1 text-slate-500">
         Tổng quan hoạt động kinh doanh và tình trạng kho hàng.
       </p>
+      <div className="mt-6">
+        <SalesOverview />
+      </div>
     </div>
   );
 }
