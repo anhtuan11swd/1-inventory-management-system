@@ -1,4 +1,5 @@
-import { Boxes, Component, Package, ScrollText } from "lucide-react";
+import { Award, Package, Ruler, Tag, Warehouse } from "lucide-react";
+import Breadcrumbs from "@/components/dashboard/Breadcrumbs";
 import FixedHeader from "@/components/dashboard/FixedHeader";
 import OptionCard from "@/components/dashboard/OptionCard";
 
@@ -12,37 +13,49 @@ const OPTION_CARDS = [
     title: "Hàng hóa",
   },
   {
-    description: "Nhóm hàng hóa theo danh mục.",
-    enabled: false,
-    icon: Boxes,
-    link: "#",
-    linkTitle: "Nhóm mặt hàng mới",
-    title: "Nhóm hàng hóa",
+    description: "Phân loại hàng hóa theo danh mục.",
+    enabled: true,
+    icon: Tag,
+    link: "/dashboard/inventory/categories/new",
+    linkTitle: "Danh mục mới",
+    title: "Danh mục",
   },
   {
-    description: "Hàng hóa tổng hợp từ nhiều mục.",
-    enabled: false,
-    icon: Component,
-    link: "#",
-    linkTitle: "Mặt hàng tổng hợp mới",
-    title: "Mặt hàng tổng hợp",
+    description: "Thương hiệu sản phẩm.",
+    enabled: true,
+    icon: Award,
+    link: "/dashboard/inventory/brands/new",
+    linkTitle: "Thương hiệu mới",
+    title: "Thương hiệu",
   },
   {
-    description: "Danh sách giá cho hàng hóa.",
-    enabled: false,
-    icon: ScrollText,
-    link: "#",
-    linkTitle: "Bảng giá mới",
-    title: "Bảng giá",
+    description: "Đơn vị đo lường hàng hóa.",
+    enabled: true,
+    icon: Ruler,
+    link: "/dashboard/inventory/units/new",
+    linkTitle: "Đơn vị mới",
+    title: "Đơn vị tính",
+  },
+  {
+    description: "Kho hàng và vị trí lưu trữ.",
+    enabled: true,
+    icon: Warehouse,
+    link: "/dashboard/inventory/warehouse/new",
+    linkTitle: "Kho hàng mới",
+    title: "Kho hàng",
   },
 ];
 
 export default function InventoryPage() {
   return (
     <div>
-      <FixedHeader newLink="/dashboard/inventory/items/new" />
+      <Breadcrumbs />
+      <FixedHeader
+        newLink="/dashboard/inventory/items/new"
+        title="Tổng quan kho hàng"
+      />
 
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {OPTION_CARDS.map((card) => (
           <OptionCard key={card.title} optionData={card} />
         ))}

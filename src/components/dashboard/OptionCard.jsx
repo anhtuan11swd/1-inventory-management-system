@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import Link from "next/link";
 
 export default function OptionCard({ optionData }) {
@@ -11,7 +12,7 @@ export default function OptionCard({ optionData }) {
   } = optionData;
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+    <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
         <Icon className="text-blue-600" size={20} strokeWidth={1.5} />
       </div>
@@ -19,12 +20,13 @@ export default function OptionCard({ optionData }) {
       <p className="mt-1 text-slate-500 text-xs leading-relaxed">
         {description}
       </p>
-      <div className="mt-4">
+      <div className="mt-auto pt-4">
         {enabled ? (
           <Link
             className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 font-medium text-slate-50 text-xs transition-colors hover:bg-blue-700"
             href={link}
           >
+            <Plus size={14} />
             {linkTitle}
           </Link>
         ) : (

@@ -18,9 +18,12 @@ import SubscriptionCard from "@/components/dashboard/SubscriptionCard";
 import { cn } from "@/lib/utils";
 
 const INVENTORY_LINKS = [
+  { exact: true, href: "/dashboard/inventory", title: "Tổng quan" },
   { href: "/dashboard/inventory/items", title: "Hàng hóa" },
-  { href: "/dashboard/inventory/item-groups", title: "Nhóm hàng hóa" },
-  { href: "/dashboard/inventory/adjustments", title: "Điều chỉnh" },
+  { href: "/dashboard/inventory/categories", title: "Danh mục" },
+  { href: "/dashboard/inventory/brands", title: "Thương hiệu" },
+  { href: "/dashboard/inventory/units", title: "Đơn vị tính" },
+  { href: "/dashboard/inventory/warehouse", title: "Kho hàng" },
 ];
 
 const SALES_LINKS = [
@@ -234,7 +237,7 @@ export default function Sidebar({
   return (
     <>
       <aside
-        aria-label="Sidebar"
+        aria-label="Thanh điều hướng"
         className={cn(
           "hidden h-screen shrink-0 overflow-hidden lg:block",
           GRADIENT,

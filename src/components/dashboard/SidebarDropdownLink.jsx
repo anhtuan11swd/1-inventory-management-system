@@ -12,7 +12,11 @@ import {
 
 export default function SidebarDropdownLink({ icon: Icon, title, links }) {
   const pathname = usePathname();
-  const isAnyActive = links.some((link) => pathname === link.href);
+  const isAnyActive = links.some((link) =>
+    link.exact
+      ? pathname === link.href
+      : pathname === link.href || pathname.startsWith(`${link.href}/`),
+  );
   const [open, setOpen] = useState(isAnyActive);
 
   return (
@@ -28,6 +32,7 @@ export default function SidebarDropdownLink({ icon: Icon, title, links }) {
       <CollapsibleContent className="mt-0.5 space-y-0.5">
         {links.map((link) => (
           <CollapsibleLink
+            exact={link.exact}
             href={link.href}
             key={link.href}
             title={link.title}
