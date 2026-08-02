@@ -1,20 +1,39 @@
 "use client";
 
 import {
-  BaggageClaim,
   BarChart4,
   Cable,
   ChevronLeft,
   Files,
   Home,
+  Package,
   ShoppingBag,
   ShoppingBasket,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import SidebarDropdownLink from "@/components/dashboard/SidebarDropdownLink";
 import SubscriptionCard from "@/components/dashboard/SubscriptionCard";
 import { cn } from "@/lib/utils";
+
+const INVENTORY_LINKS = [
+  { href: "/dashboard/inventory/items", title: "Hàng hóa" },
+  { href: "/dashboard/inventory/item-groups", title: "Nhóm hàng hóa" },
+  { href: "/dashboard/inventory/adjustments", title: "Điều chỉnh" },
+];
+
+const SALES_LINKS = [
+  { href: "/dashboard/sales/customers", title: "Khách hàng" },
+  { href: "/dashboard/sales/sales-orders", title: "Đơn hàng bán" },
+  { href: "/dashboard/sales/packages", title: "Gói hàng" },
+  { href: "/dashboard/sales/shipments", title: "Vận chuyển" },
+  { href: "/dashboard/sales/invoices", title: "Hóa đơn" },
+  { href: "/dashboard/sales/sales-receipts", title: "Biên nhận bán" },
+  { href: "/dashboard/sales/payment-received", title: "Thanh toán nhận" },
+  { href: "/dashboard/sales/sales-returns", title: "Trả hàng bán" },
+  { href: "/dashboard/sales/credit-notes", title: "Ghi có" },
+];
 
 const NAV_LINKS = [
   {
@@ -22,18 +41,6 @@ const NAV_LINKS = [
     icon: Home,
     isButton: false,
     label: "Trang chủ",
-  },
-  {
-    href: "/dashboard/inventory",
-    icon: BaggageClaim,
-    isButton: true,
-    label: "Kho hàng",
-  },
-  {
-    href: "/dashboard/sales",
-    icon: ShoppingBasket,
-    isButton: false,
-    label: "Bán hàng",
   },
   {
     href: "/dashboard/purchases",
@@ -69,9 +76,10 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
 
   return (
     <div className="flex h-full flex-col">
+      {/* Fixed header */}
       <div
         className={cn(
-          "flex h-14 items-center gap-2 border-slate-800 border-b bg-slate-950 px-3",
+          "flex h-14 shrink-0 items-center gap-2 border-slate-800 border-b bg-slate-950 px-3",
           collapsed && "justify-center px-1",
         )}
       >
@@ -87,32 +95,90 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
         )}
       </div>
 
+      {/* Scrollable navigation */}
       <nav
         aria-label="Điều hướng chính"
-        className="flex-1 overflow-y-auto px-3 py-6"
+        className="min-h-0 flex-1 overflow-y-auto px-3 py-6"
       >
-        <div className="flex flex-col gap-2">
-          {NAV_LINKS.map(({ href, label, icon: Icon, isButton }) => {
+        <div className="flex flex-col gap-1">
+          {/* Home link */}
+          {NAV_LINKS.slice(0, 1).map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
+            return (
+              <Link
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "flex items-center gap-2.5 rounded-md px-3 py-2 font-medium text-sm transition-colors",
+                  collapsed && "justify-center px-0",
+                  isActive
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-slate-50",
+                )}
+                href={href}
+                key={href}
+                title={collapsed ? label : undefined}
+              >
+                <Icon aria-hidden="true" className="shrink-0" size={18} />
+                {!collapsed && <span className="truncate">{label}</span>}
+              </Link>
+            );
+          })}
 
-            if (isButton) {
-              return (
-                <button
-                  className={cn(
-                    "flex items-center gap-2.5 rounded-md px-3 py-2 font-medium text-sm transition-colors",
-                    collapsed && "justify-center px-0",
-                    "text-slate-300 hover:bg-slate-800 hover:text-slate-50",
-                  )}
-                  key={href}
-                  title={collapsed ? label : undefined}
-                  type="button"
-                >
-                  <Icon aria-hidden="true" className="shrink-0" size={18} />
-                  {!collapsed && <span className="truncate">{label}</span>}
-                </button>
-              );
-            }
+          {/* Inventory dropdown */}
+          {!collapsed && (
+            <SidebarDropdownLink
+              icon={Package}
+              links={INVENTORY_LINKS}
+              title="Kho hàng"
+            />
+          )}
+          {collapsed && (
+            <Link
+              aria-current={
+                pathname.startsWith("/dashboard/inventory") ? "page" : undefined
+              }
+              className={cn(
+                "flex items-center justify-center rounded-md px-3 py-2 font-medium text-sm transition-colors",
+                pathname.startsWith("/dashboard/inventory")
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-300 hover:bg-slate-800 hover:text-slate-50",
+              )}
+              href="/dashboard/inventory"
+              title="Kho hàng"
+            >
+              <Package aria-hidden="true" size={18} />
+            </Link>
+          )}
 
+          {/* Sales dropdown */}
+          {!collapsed && (
+            <SidebarDropdownLink
+              icon={ShoppingBasket}
+              links={SALES_LINKS}
+              title="Bán hàng"
+            />
+          )}
+          {collapsed && (
+            <Link
+              aria-current={
+                pathname.startsWith("/dashboard/sales") ? "page" : undefined
+              }
+              className={cn(
+                "flex items-center justify-center rounded-md px-3 py-2 font-medium text-sm transition-colors",
+                pathname.startsWith("/dashboard/sales")
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-300 hover:bg-slate-800 hover:text-slate-50",
+              )}
+              href="/dashboard/sales"
+              title="Bán hàng"
+            >
+              <ShoppingBasket aria-hidden="true" size={18} />
+            </Link>
+          )}
+
+          {/* Remaining links */}
+          {NAV_LINKS.slice(1).map(({ href, label, icon: Icon }) => {
+            const isActive = pathname === href;
             return (
               <Link
                 aria-current={isActive ? "page" : undefined}
@@ -135,7 +201,8 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
         </div>
       </nav>
 
-      <div className="mt-auto border-slate-800 border-t bg-slate-950 p-3">
+      {/* Fixed footer */}
+      <div className="shrink-0 border-slate-800 border-t bg-slate-950 p-3">
         {!collapsed && <SubscriptionCard />}
         <button
           aria-label="Thu gọn/mở rộng menu"
@@ -169,7 +236,7 @@ export default function Sidebar({
       <aside
         aria-label="Sidebar"
         className={cn(
-          "hidden shrink-0 lg:block",
+          "hidden h-screen shrink-0 overflow-hidden lg:block",
           GRADIENT,
           collapsed ? "w-16" : "w-64",
         )}
@@ -192,7 +259,7 @@ export default function Sidebar({
         aria-hidden={!mobileOpen}
         aria-label="Sidebar di động"
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col transition-transform duration-200 lg:hidden",
+          "fixed inset-y-0 left-0 z-50 flex h-screen w-64 flex-col overflow-hidden transition-transform duration-200 lg:hidden",
           GRADIENT,
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         )}
