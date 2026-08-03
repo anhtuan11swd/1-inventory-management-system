@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/breadcrumb";
 
 const LABELS = {
+  adjustments: "Điều chỉnh kho",
   brands: "Thương hiệu",
   categories: "Danh mục",
   "credit-notes": "Ghi có",

@@ -4,9 +4,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Breadcrumbs from "@/components/dashboard/Breadcrumbs";
 import FormHeader from "@/components/dashboard/FormHeader";
+import SelectInput from "@/components/form-inputs/SelectInput";
 import SubmitButton from "@/components/form-inputs/SubmitButton";
 import TextAreaInput from "@/components/form-inputs/TextAreaInput";
 import TextInput from "@/components/form-inputs/TextInput";
+
+const WAREHOUSE_TYPE_OPTIONS = [
+  { label: "Chính", value: "main" },
+  { label: "Chi nhánh", value: "branch" },
+];
 
 export default function NewWarehousePage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +46,7 @@ export default function NewWarehousePage() {
       <Breadcrumbs />
       <div className="mx-auto max-w-4xl space-y-6">
         <FormHeader
+          disabled={isLoading}
           href="/dashboard/inventory/warehouse"
           title="Tạo kho hàng mới"
         />
@@ -49,6 +56,7 @@ export default function NewWarehousePage() {
         >
           <div className="grid grid-cols-1 gap-6">
             <TextInput
+              disabled={isLoading}
               errors={errors}
               isRequired
               label="Tên kho"
@@ -56,6 +64,7 @@ export default function NewWarehousePage() {
               register={register}
             />
             <TextInput
+              disabled={isLoading}
               errors={errors}
               isRequired
               label="Vị trí"
@@ -63,15 +72,20 @@ export default function NewWarehousePage() {
               register={register}
             />
             <TextAreaInput
+              disabled={isLoading}
               errors={errors}
               label="Mô tả"
               name="description"
               register={register}
             />
-            <TextInput
+            <SelectInput
+              defaultValue=""
+              disabled={isLoading}
               errors={errors}
+              isRequired
               label="Loại kho"
               name="type"
+              options={WAREHOUSE_TYPE_OPTIONS}
               register={register}
             />
           </div>

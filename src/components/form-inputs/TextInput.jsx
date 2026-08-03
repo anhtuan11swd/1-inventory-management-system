@@ -10,6 +10,7 @@ export default function TextInput({
   isRequired = false,
   type = "text",
   className = "",
+  disabled = false,
 }) {
   return (
     <div className={className}>
@@ -21,7 +22,8 @@ export default function TextInput({
         {isRequired && <span className="ml-0.5 text-red-500">*</span>}
       </label>
       <input
-        className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 text-sm shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 text-sm shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:cursor-not-allowed"
+        disabled={disabled}
         id={name}
         type={type}
         {...register(name, {

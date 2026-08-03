@@ -24,6 +24,7 @@ const INVENTORY_LINKS = [
   { href: "/dashboard/inventory/brands", title: "Thương hiệu" },
   { href: "/dashboard/inventory/units", title: "Đơn vị tính" },
   { href: "/dashboard/inventory/warehouse", title: "Kho hàng" },
+  { href: "/dashboard/inventory/adjustments", title: "Điều chỉnh kho" },
 ];
 
 const SALES_LINKS = [
@@ -239,7 +240,7 @@ export default function Sidebar({
       <aside
         aria-label="Thanh điều hướng"
         className={cn(
-          "hidden h-screen shrink-0 overflow-hidden lg:block",
+          "hidden shrink-0 overflow-hidden lg:sticky lg:top-0 lg:block lg:h-screen",
           GRADIENT,
           collapsed ? "w-16" : "w-64",
         )}

@@ -40,6 +40,7 @@ export default function NewCategoryPage() {
       <Breadcrumbs />
       <div className="mx-auto max-w-4xl space-y-6">
         <FormHeader
+          disabled={isLoading}
           href="/dashboard/inventory/categories"
           title="Tạo danh mục mới"
         />
@@ -49,6 +50,7 @@ export default function NewCategoryPage() {
         >
           <div className="grid grid-cols-1 gap-6">
             <TextInput
+              disabled={isLoading}
               errors={errors}
               isRequired
               label="Tên danh mục"
@@ -56,6 +58,7 @@ export default function NewCategoryPage() {
               register={register}
             />
             <TextAreaInput
+              disabled={isLoading}
               errors={errors}
               label="Mô tả"
               name="description"

@@ -39,6 +39,7 @@ export default function NewUnitPage() {
       <Breadcrumbs />
       <div className="mx-auto max-w-4xl space-y-6">
         <FormHeader
+          disabled={isLoading}
           href="/dashboard/inventory/units"
           title="Tạo đơn vị tính mới"
         />
@@ -48,6 +49,7 @@ export default function NewUnitPage() {
         >
           <div className="grid grid-cols-1 gap-6">
             <TextInput
+              disabled={isLoading}
               errors={errors}
               isRequired
               label="Tên đơn vị"
@@ -55,6 +57,7 @@ export default function NewUnitPage() {
               register={register}
             />
             <TextInput
+              disabled={isLoading}
               errors={errors}
               isRequired
               label="Viết tắt"

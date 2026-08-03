@@ -9,7 +9,7 @@ export default function SubmitButton({
 }) {
   return (
     <button
-      className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 font-medium text-slate-50 text-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 font-medium text-slate-50 text-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:cursor-not-allowed disabled:hover:bg-blue-600"
       disabled={isLoading}
       type="submit"
     >
