@@ -20,12 +20,12 @@ export async function POST(request) {
         address: data.address || null,
         contactPerson: data.contactPerson || null,
         email: data.email || null,
-        name: data.name,
         notes: data.notes || null,
         paymentTerms: data.paymentTerms || null,
         phone: data.phone || null,
         supplierCode: data.supplierCode || null,
         taxId: data.taxId || null,
+        title: data.title,
       },
     });
 
@@ -38,7 +38,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     const suppliers = await db.supplier.findMany({
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json(suppliers);

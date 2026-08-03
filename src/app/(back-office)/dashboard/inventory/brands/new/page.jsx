@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -12,6 +13,7 @@ import { brandSchema } from "@/lib/validations";
 
 export default function NewBrandPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -32,6 +34,7 @@ export default function NewBrandPage() {
       if (res.ok) {
         reset();
         toast.success("Tạo thương hiệu thành công");
+        router.push("/dashboard/inventory/brands");
       }
     } catch (error) {
       console.error(error);

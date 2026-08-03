@@ -33,7 +33,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     const warehouses = await db.warehouse.findMany({
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json(warehouses);

@@ -39,3 +39,15 @@ export async function POST(request) {
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const adjustments = await db.transferStockAdjustment.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(adjustments);
+  } catch (_error) {
+    return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
+  }
+}

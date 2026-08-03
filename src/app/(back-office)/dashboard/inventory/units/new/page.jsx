@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -12,6 +13,7 @@ import { unitSchema } from "@/lib/validations";
 
 export default function NewUnitPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -32,6 +34,7 @@ export default function NewUnitPage() {
       if (res.ok) {
         reset();
         toast.success("Tạo đơn vị thành công");
+        router.push("/dashboard/inventory/units");
       }
     } catch (error) {
       console.error(error);

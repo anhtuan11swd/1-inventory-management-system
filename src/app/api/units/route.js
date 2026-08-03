@@ -28,7 +28,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     const units = await db.unit.findMany({
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json(units);

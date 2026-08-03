@@ -62,7 +62,6 @@ export const supplierSchema = z.object({
   address: z.string().optional(),
   contactPerson: z.string().optional(),
   email: z.string().email("Email không hợp lệ").optional().or(z.literal("")),
-  name: z.string().min(1, "Tên nhà cung cấp là bắt buộc"),
   notes: z.string().optional(),
   paymentTerms: z.string().optional(),
   phone: z
@@ -82,6 +81,7 @@ export const supplierSchema = z.object({
       message:
         "Mã số thuế phải gồm 10 số hoặc 13 số (XXXXXXXXXX hoặc XXXXXXXXXX-XXX)",
     }),
+  title: z.string().min(1, "Tên nhà cung cấp là bắt buộc"),
 });
 
 export const addStockSchema = z.object({

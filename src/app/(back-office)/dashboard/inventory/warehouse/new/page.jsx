@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -19,6 +20,7 @@ const WAREHOUSE_TYPE_OPTIONS = [
 
 export default function NewWarehousePage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -39,6 +41,7 @@ export default function NewWarehousePage() {
       if (res.ok) {
         reset();
         toast.success("Tạo kho hàng thành công");
+        router.push("/dashboard/inventory/warehouse");
       }
     } catch (error) {
       console.error(error);

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -13,6 +14,7 @@ import { supplierSchema } from "@/lib/validations";
 
 export default function NewSupplierPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -33,6 +35,7 @@ export default function NewSupplierPage() {
       if (res.ok) {
         reset();
         toast.success("Tạo nhà cung cấp thành công");
+        router.push("/dashboard/inventory/suppliers");
       }
     } catch (error) {
       console.error(error);
@@ -60,7 +63,7 @@ export default function NewSupplierPage() {
               errors={errors}
               isRequired
               label="Tên nhà cung cấp"
-              name="name"
+              name="title"
               register={register}
             />
             <TextInput
