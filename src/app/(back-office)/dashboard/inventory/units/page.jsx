@@ -1,7 +1,11 @@
 import Breadcrumbs from "@/components/dashboard/Breadcrumbs";
+import DataTable from "@/components/dashboard/DataTable";
 import FixedHeader from "@/components/dashboard/FixedHeader";
+import { getData } from "@/lib/getData";
 
-export default function UnitsPage() {
+export default async function UnitsPage() {
+  const units = await getData("/api/units");
+
   return (
     <div>
       <Breadcrumbs />
@@ -11,7 +15,18 @@ export default function UnitsPage() {
       />
       <div className="mt-6">
         <h1 className="font-semibold text-2xl">Đơn vị tính</h1>
-        <p className="mt-1 text-slate-500">Quản lý đơn vị tính hàng hóa.</p>
+        <p className="mt-1 text-slate-500">Quản lý đơn vị đo lường.</p>
+      </div>
+      <div className="mt-6">
+        <DataTable
+          columns={["title", "abbreviation", "createdAt"]}
+          data={units}
+          headerLabels={{
+            abbreviation: "Viết tắt",
+            createdAt: "Ngày tạo",
+            title: "Tên đơn vị",
+          }}
+        />
       </div>
     </div>
   );
