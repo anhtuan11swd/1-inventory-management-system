@@ -1,5 +1,6 @@
 import {
   Diff,
+  Factory,
   LayoutGrid,
   LayoutPanelTop,
   Scale,
@@ -50,6 +51,14 @@ const OPTION_CARDS = [
     link: "/dashboard/inventory/warehouse/new",
     linkTitle: "Kho hàng mới",
     title: "Kho hàng",
+  },
+  {
+    description: "Nhà cung cấp sản phẩm.",
+    enabled: true,
+    icon: Factory,
+    link: "/dashboard/inventory/suppliers/new",
+    linkTitle: "Nhà cung cấp mới",
+    title: "Nhà cung cấp",
   },
   {
     description: "Điều chỉnh tồn kho.",

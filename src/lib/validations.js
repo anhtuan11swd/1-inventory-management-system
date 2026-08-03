@@ -58,10 +58,37 @@ export const itemSchema = z.object({
     .optional(),
 });
 
+export const supplierSchema = z.object({
+  address: z.string().optional(),
+  contactPerson: z.string().optional(),
+  email: z.string().email("Email không hợp lệ").optional().or(z.literal("")),
+  name: z.string().min(1, "Tên nhà cung cấp là bắt buộc"),
+  notes: z.string().optional(),
+  paymentTerms: z.string().optional(),
+  phone: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^\d{10}$/.test(val), {
+      message: "Số điện thoại phải có đúng 10 chữ số",
+    })
+    .refine((val) => !val || val.startsWith("0"), {
+      message: "Số điện thoại phải bắt đầu bằng 0",
+    }),
+  supplierCode: z.string().optional(),
+  taxId: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^\d{10}$|^\d{10}-\d{3}$/.test(val), {
+      message:
+        "Mã số thuế phải gồm 10 số hoặc 13 số (XXXXXXXXXX hoặc XXXXXXXXXX-XXX)",
+    }),
+});
+
 export const addStockSchema = z.object({
   addStockQuantity: z.coerce
     .number({ invalid_type_error: "Số lượng phải là số" })
     .min(1, "Số lượng phải lớn hơn 0"),
+  itemId: z.string().optional(),
   notes: z.string().optional(),
   receivingWarehouseId: z.string().min(1, "Kho nhận là bắt buộc"),
   referenceNumber: z.string().optional(),
@@ -69,6 +96,7 @@ export const addStockSchema = z.object({
 
 export const transferStockSchema = z.object({
   givingWarehouseId: z.string().min(1, "Kho gửi là bắt buộc"),
+  itemId: z.string().optional(),
   notes: z.string().optional(),
   receivingWarehouseId: z.string().min(1, "Kho nhận là bắt buộc"),
   referenceNumber: z.string().optional(),

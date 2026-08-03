@@ -11,6 +11,9 @@ export default function TextInput({
   type = "text",
   className = "",
   disabled = false,
+  maxLength,
+  inputMode,
+  pattern,
 }) {
   return (
     <div className={className}>
@@ -25,6 +28,9 @@ export default function TextInput({
         className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 text-sm shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:cursor-not-allowed"
         disabled={disabled}
         id={name}
+        inputMode={inputMode}
+        maxLength={maxLength}
+        pattern={pattern}
         type={type}
         {...register(name, {
           required: isRequired ? `${label} là bắt buộc` : false,

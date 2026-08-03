@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import SelectInput from "@/components/form-inputs/SelectInput";
@@ -19,6 +19,7 @@ const WAREHOUSE_OPTIONS = [
 
 export default function TransferInventoryForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [itemOptions, setItemOptions] = useState([]);
   const router = useRouter();
   const {
     register,
@@ -28,6 +29,17 @@ export default function TransferInventoryForm() {
   } = useForm({
     resolver: zodResolver(transferStockSchema),
   });
+
+  useEffect(() => {
+    fetch("/api/items")
+      .then((res) => res.json())
+      .then((data) =>
+        setItemOptions(
+          data.map((item) => ({ label: item.title, value: item.id })),
+        ),
+      )
+      .catch(() => {});
+  }, []);
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -55,6 +67,16 @@ export default function TransferInventoryForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid grid-cols-1 gap-6">
+        <SelectInput
+          defaultValue=""
+          disabled={isLoading}
+          errors={errors}
+          label="Mặt hàng"
+          name="itemId"
+          options={itemOptions}
+          register={register}
+        />
+
         <TextInput
           disabled={isLoading}
           errors={errors}

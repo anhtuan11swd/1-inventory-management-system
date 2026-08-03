@@ -20,11 +20,13 @@ export async function POST(request) {
       receivingWarehouseId,
       referenceNumber,
       notes,
+      itemId,
     } = result.data;
 
     const adjustment = await db.transferStockAdjustment.create({
       data: {
         fromWarehouseId: givingWarehouseId,
+        itemId: itemId || null,
         notes: notes || null,
         referenceNumber: referenceNumber || null,
         stockQuantity: transferStockQuantity,

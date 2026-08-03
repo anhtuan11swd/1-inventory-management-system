@@ -24,6 +24,7 @@ const INVENTORY_LINKS = [
   { href: "/dashboard/inventory/brands", title: "Thương hiệu" },
   { href: "/dashboard/inventory/units", title: "Đơn vị tính" },
   { href: "/dashboard/inventory/warehouse", title: "Kho hàng" },
+  { href: "/dashboard/inventory/suppliers", title: "Nhà cung cấp" },
   { href: "/dashboard/inventory/adjustments", title: "Điều chỉnh kho" },
 ];
 

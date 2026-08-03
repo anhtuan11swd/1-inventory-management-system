@@ -30,6 +30,7 @@ const LABELS = {
   "sales-receipts": "Biên nhận bán",
   "sales-returns": "Trả hàng bán",
   shipments: "Vận chuyển",
+  suppliers: "Nhà cung cấp",
   units: "Đơn vị tính",
   warehouse: "Kho hàng",
 };

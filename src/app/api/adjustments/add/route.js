@@ -14,11 +14,17 @@ export async function POST(request) {
       );
     }
 
-    const { addStockQuantity, receivingWarehouseId, referenceNumber, notes } =
-      result.data;
+    const {
+      addStockQuantity,
+      receivingWarehouseId,
+      referenceNumber,
+      notes,
+      itemId,
+    } = result.data;
 
     const adjustment = await db.addStockAdjustment.create({
       data: {
+        itemId: itemId || null,
         notes: notes || null,
         referenceNumber: referenceNumber || null,
         stockQuantity: addStockQuantity,
