@@ -19,22 +19,32 @@ export default async function ItemsPage() {
       </div>
       <div className="mt-6">
         <DataTable
+          actions={[
+            {
+              href: "/dashboard/inventory/items/update/{id}",
+              label: "Sửa",
+            },
+          ]}
           columns={[
+            "imageUrl",
             "title",
             "category.title",
             "sellingPrice",
             "buyingPrice",
             "quantity",
             "createdAt",
+            "updatedAt",
           ]}
           data={items}
           headerLabels={{
             buyingPrice: "Giá mua",
             "category.title": "Danh mục",
             createdAt: "Ngày tạo",
+            imageUrl: "Ảnh",
             quantity: "Số lượng",
             sellingPrice: "Giá bán",
             title: "Tên mặt hàng",
+            updatedAt: "Cập nhật",
           }}
         />
       </div>

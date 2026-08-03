@@ -19,6 +19,12 @@ export default async function CategoriesPage() {
       </div>
       <div className="mt-6">
         <DataTable
+          actions={[
+            {
+              href: "/dashboard/inventory/categories/update/{id}",
+              label: "Sửa",
+            },
+          ]}
           columns={["title", "description"]}
           data={categories}
           headerLabels={{ description: "Mô tả", title: "Tên danh mục" }}

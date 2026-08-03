@@ -19,6 +19,12 @@ export default async function SuppliersPage() {
       </div>
       <div className="mt-6">
         <DataTable
+          actions={[
+            {
+              href: "/dashboard/inventory/suppliers/update/{id}",
+              label: "Sửa",
+            },
+          ]}
           columns={["title", "supplierCode", "phone", "email", "address"]}
           data={suppliers}
           headerLabels={{

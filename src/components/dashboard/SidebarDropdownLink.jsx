@@ -10,7 +10,12 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-export default function SidebarDropdownLink({ icon: Icon, title, links }) {
+export default function SidebarDropdownLink({
+  icon: Icon,
+  title,
+  links,
+  onNavigate,
+}) {
   const pathname = usePathname();
   const isAnyActive = links.some((link) =>
     link.exact
@@ -35,6 +40,7 @@ export default function SidebarDropdownLink({ icon: Icon, title, links }) {
             exact={link.exact}
             href={link.href}
             key={link.href}
+            onNavigate={onNavigate}
             title={link.title}
           />
         ))}

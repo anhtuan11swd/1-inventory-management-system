@@ -1,6 +1,7 @@
 "use client";
 
 import { Pencil, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 function getNestedValue(obj, path) {
@@ -10,6 +11,10 @@ function getNestedValue(obj, path) {
 function formatDate(value) {
   if (!value) return "—";
   return new Date(value).toLocaleDateString("vi-VN");
+}
+
+function resolveHref(pattern, row) {
+  return pattern.replace(/\{(\w+)\}/g, (_, key) => row[key] ?? "");
 }
 
 export default function DataTable({
@@ -61,12 +66,25 @@ export default function DataTable({
               {headers.map((key) => {
                 const value = getNestedValue(row, key);
                 const isDate = key === "createdAt" || key === "updatedAt";
+                const isImage = key === "imageUrl" && value;
                 return (
                   <td
                     className="whitespace-nowrap px-4 py-3 text-slate-900 text-sm"
                     key={key}
                   >
-                    {isDate ? formatDate(value) : (value ?? "—")}
+                    {isImage ? (
+                      <Image
+                        alt="Ảnh"
+                        className="h-10 w-10 rounded object-cover"
+                        height={40}
+                        src={value}
+                        width={40}
+                      />
+                    ) : isDate ? (
+                      formatDate(value)
+                    ) : (
+                      (value ?? "—")
+                    )}
                   </td>
                 );
               })}
@@ -76,7 +94,7 @@ export default function DataTable({
                     {actions?.map((action) => (
                       <Link
                         className="rounded p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-blue-600"
-                        href={action.href(row)}
+                        href={resolveHref(action.href, row)}
                         key={action.label}
                       >
                         <Pencil size={16} />

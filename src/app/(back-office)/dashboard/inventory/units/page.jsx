@@ -19,6 +19,12 @@ export default async function UnitsPage() {
       </div>
       <div className="mt-6">
         <DataTable
+          actions={[
+            {
+              href: "/dashboard/inventory/units/update/{id}",
+              label: "Sửa",
+            },
+          ]}
           columns={["title", "abbreviation", "createdAt"]}
           data={units}
           headerLabels={{

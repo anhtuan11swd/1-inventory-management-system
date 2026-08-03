@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-export default function CollapsibleLink({ href, title, exact }) {
+export default function CollapsibleLink({ href, title, exact, onNavigate }) {
   const pathname = usePathname();
   const isActive = exact
     ? pathname === href
@@ -20,6 +20,7 @@ export default function CollapsibleLink({ href, title, exact }) {
           : "text-slate-300 hover:bg-slate-800 hover:text-slate-50",
       )}
       href={href}
+      onClick={onNavigate}
     >
       <span className="flex items-center gap-2">
         <PlusCircle className="shrink-0" size={14} />

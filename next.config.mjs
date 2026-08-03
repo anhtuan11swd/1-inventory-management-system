@@ -6,6 +6,10 @@ const nextConfig = {
         hostname: "utfs.io",
         protocol: "https",
       },
+      {
+        hostname: "*.ufs.sh",
+        protocol: "https",
+      },
     ],
   },
   reactCompiler: true,

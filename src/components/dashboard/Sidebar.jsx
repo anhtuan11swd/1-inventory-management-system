@@ -76,7 +76,7 @@ const NAV_LINKS = [
 const GRADIENT =
   "bg-gradient-to-b from-slate-800 to-slate-950 border-r border-slate-800 text-slate-50";
 
-function SidebarContent({ collapsed, onToggleCollapse }) {
+function SidebarContent({ collapsed, onToggleCollapse, onNavigate }) {
   const pathname = usePathname();
 
   return (
@@ -92,6 +92,7 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
           aria-label="Về trang chủ"
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-600 text-slate-50"
           href="/dashboard/home/overview"
+          onClick={onNavigate}
         >
           <ShoppingBag aria-hidden="true" size={18} />
         </Link>
@@ -121,6 +122,7 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
                 )}
                 href={href}
                 key={href}
+                onClick={onNavigate}
                 title={collapsed ? label : undefined}
               >
                 <Icon aria-hidden="true" className="shrink-0" size={18} />
@@ -134,6 +136,7 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
             <SidebarDropdownLink
               icon={Package}
               links={INVENTORY_LINKS}
+              onNavigate={onNavigate}
               title="Kho hàng"
             />
           )}
@@ -149,6 +152,7 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
                   : "text-slate-300 hover:bg-slate-800 hover:text-slate-50",
               )}
               href="/dashboard/inventory"
+              onClick={onNavigate}
               title="Kho hàng"
             >
               <Package aria-hidden="true" size={18} />
@@ -160,6 +164,7 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
             <SidebarDropdownLink
               icon={ShoppingBasket}
               links={SALES_LINKS}
+              onNavigate={onNavigate}
               title="Bán hàng"
             />
           )}
@@ -175,6 +180,7 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
                   : "text-slate-300 hover:bg-slate-800 hover:text-slate-50",
               )}
               href="/dashboard/sales"
+              onClick={onNavigate}
               title="Bán hàng"
             >
               <ShoppingBasket aria-hidden="true" size={18} />
@@ -196,6 +202,7 @@ function SidebarContent({ collapsed, onToggleCollapse }) {
                 )}
                 href={href}
                 key={href}
+                onClick={onNavigate}
                 title={collapsed ? label : undefined}
               >
                 <Icon aria-hidden="true" className="shrink-0" size={18} />
@@ -279,7 +286,11 @@ export default function Sidebar({
             <X size={20} />
           </button>
         </div>
-        <SidebarContent collapsed={false} onToggleCollapse={onCloseMobile} />
+        <SidebarContent
+          collapsed={false}
+          onNavigate={onCloseMobile}
+          onToggleCollapse={onCloseMobile}
+        />
       </aside>
     </>
   );

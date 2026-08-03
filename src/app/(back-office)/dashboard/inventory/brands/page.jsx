@@ -19,6 +19,12 @@ export default async function BrandsPage() {
       </div>
       <div className="mt-6">
         <DataTable
+          actions={[
+            {
+              href: "/dashboard/inventory/brands/update/{id}",
+              label: "Sửa",
+            },
+          ]}
           columns={["title", "createdAt"]}
           data={brands}
           headerLabels={{ createdAt: "Ngày tạo", title: "Tên thương hiệu" }}

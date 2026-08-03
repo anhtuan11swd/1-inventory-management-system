@@ -35,24 +35,31 @@ const LABELS = {
   warehouse: "Kho hàng",
 };
 
-export default function Breadcrumbs() {
+export default function Breadcrumbs({ lastLabel }) {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
+  const SKIP_SEGMENTS = ["update"];
 
-  const items = segments.map((segment, index) => {
-    const href = `/${segments.slice(0, index + 1).join("/")}`;
-    const label = LABELS[segment] || segment;
-    const isLast = index === segments.length - 1;
-
-    return { href, isLast, label };
-  });
+  const items = segments
+    .map((segment, index) => {
+      if (SKIP_SEGMENTS.includes(segment)) return null;
+      return { originalIndex: index, segment };
+    })
+    .filter(Boolean)
+    .map((item, index, arr) => {
+      const isLast = index === arr.length - 1;
+      const href = `/${segments.slice(0, item.originalIndex + 1).join("/")}`;
+      const label =
+        isLast && lastLabel ? lastLabel : LABELS[item.segment] || item.segment;
+      return { href, isLast, label };
+    });
 
   if (items.length <= 1) return null;
 
   return (
     <Breadcrumb className="mb-4">
       <BreadcrumbList>
-        {items.map((item, _index) => (
+        {items.map((item) => (
           <Fragment key={item.href}>
             <BreadcrumbItem>
               {item.isLast ? (

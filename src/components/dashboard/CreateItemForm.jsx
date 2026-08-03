@@ -1,6 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -19,15 +22,37 @@ export default function CreateItemForm({
   brands,
   suppliers,
   warehouses,
+  initialData = {},
+  isUpdate = false,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm({
+    defaultValues: {
+      barcode: initialData.barcode || "",
+      brandId: initialData.brandId || "",
+      buyingPrice: initialData.buyingPrice ?? "",
+      categoryId: initialData.categoryId || "",
+      description: initialData.description || "",
+      dimensions: initialData.dimensions || "",
+      notes: initialData.notes || "",
+      quantity: initialData.quantity ?? "",
+      reorderPoint: initialData.reorderPoint ?? "",
+      sellingPrice: initialData.sellingPrice ?? "",
+      sku: initialData.sku || "",
+      supplierId: initialData.supplierId || "",
+      taxRate: initialData.taxRate ?? "",
+      title: initialData.title || "",
+      unitId: initialData.unitId || "",
+      warehouseId: initialData.warehouseId || "",
+      weight: initialData.weight ?? "",
+    },
     resolver: zodResolver(itemSchema),
   });
 
@@ -57,9 +82,17 @@ export default function CreateItemForm({
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      let imageUrl = "";
+      let imageUrl = initialData.imageUrl || "";
 
       if (imageFile) {
+        if (isUpdate && initialData.imageUrl) {
+          await fetch("/api/upload/delete", {
+            body: JSON.stringify({ url: initialData.imageUrl }),
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+          });
+        }
+
         const res = await startUpload([imageFile]);
         if (res?.[0]?.ufsUrl) {
           imageUrl = res[0].ufsUrl;
@@ -67,15 +100,20 @@ export default function CreateItemForm({
       }
 
       const payload = { ...data, imageUrl };
-      const res = await fetch("/api/items", {
+      const endpoint = isUpdate ? `/api/items/${initialData.id}` : "/api/items";
+      const method = isUpdate ? "PUT" : "POST";
+      const res = await fetch(endpoint, {
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },
-        method: "POST",
+        method,
       });
       if (res.ok) {
         reset();
         setImageFile(null);
-        toast.success("Tạo mặt hàng thành công");
+        toast.success(
+          isUpdate ? "Cập nhật mặt hàng thành công" : "Tạo mặt hàng thành công",
+        );
+        router.push("/dashboard/inventory/items");
       }
     } catch (error) {
       console.error(error);
@@ -90,7 +128,7 @@ export default function CreateItemForm({
         <FormHeader
           disabled={isLoading}
           href="/dashboard/inventory/items"
-          title="Tạo mặt hàng mới"
+          title={isUpdate ? "Cập nhật mặt hàng" : "Tạo mặt hàng mới"}
         />
         <form
           className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
@@ -108,6 +146,7 @@ export default function CreateItemForm({
 
             <ImageInput
               disabled={isLoading}
+              existingImageUrl={isUpdate ? initialData.imageUrl : undefined}
               imageFile={imageFile}
               label="Ảnh mặt hàng"
               setImageFile={setImageFile}
@@ -272,8 +311,18 @@ export default function CreateItemForm({
             />
           </div>
 
-          <div className="mt-6">
-            <SubmitButton buttonTitle="Tạo mặt hàng" isLoading={isLoading} />
+          <div className="mt-6 flex items-center gap-3">
+            <SubmitButton
+              buttonTitle={isUpdate ? "Cập nhật" : "Tạo mặt hàng"}
+              isLoading={isLoading}
+            />
+            <Link
+              className={`inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 font-medium text-slate-700 text-sm transition-colors hover:bg-slate-50 ${isLoading ? "pointer-events-none cursor-not-allowed opacity-50" : ""}`}
+              href="/dashboard/inventory/items"
+              tabIndex={isLoading ? -1 : 0}
+            >
+              <X size={16} /> Hủy
+            </Link>
           </div>
         </form>
       </div>

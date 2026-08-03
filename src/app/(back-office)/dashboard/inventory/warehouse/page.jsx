@@ -26,6 +26,12 @@ export default async function WarehousePage() {
       </div>
       <div className="mt-6">
         <DataTable
+          actions={[
+            {
+              href: "/dashboard/inventory/warehouse/update/{id}",
+              label: "Sửa",
+            },
+          ]}
           columns={["title", "location", "warehouseType", "createdAt"]}
           data={resolvedWarehouses}
           headerLabels={{

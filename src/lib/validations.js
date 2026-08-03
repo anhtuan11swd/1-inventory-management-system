@@ -30,6 +30,7 @@ export const itemSchema = z.object({
   categoryId: z.string().min(1, "Danh mục là bắt buộc"),
   description: z.string().optional(),
   dimensions: z.string().optional(),
+  imageUrl: z.string().url().optional().or(z.literal("")),
   notes: z.string().optional(),
   quantity: z.coerce
     .number({ invalid_type_error: "Số lượng phải là số" })
