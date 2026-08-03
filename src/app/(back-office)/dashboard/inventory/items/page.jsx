@@ -36,6 +36,7 @@ export default async function ItemsPage() {
             "updatedAt",
           ]}
           data={items}
+          endpoint="items"
           headerLabels={{
             buyingPrice: "Giá mua",
             "category.title": "Danh mục",
@@ -46,6 +47,7 @@ export default async function ItemsPage() {
             title: "Tên mặt hàng",
             updatedAt: "Cập nhật",
           }}
+          resourceName="hàng hóa"
         />
       </div>
     </div>

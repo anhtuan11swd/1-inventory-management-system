@@ -27,7 +27,9 @@ export default async function BrandsPage() {
           ]}
           columns={["title", "createdAt"]}
           data={brands}
+          endpoint="brands"
           headerLabels={{ createdAt: "Ngày tạo", title: "Tên thương hiệu" }}
+          resourceName="thương hiệu"
         />
       </div>
     </div>

@@ -1,8 +1,10 @@
 "use client";
 
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import DeleteBtn from "./DeleteBtn";
 
 function getNestedValue(obj, path) {
   return path.split(".").reduce((acc, key) => acc?.[key], obj);
@@ -22,8 +24,11 @@ export default function DataTable({
   columns,
   headerLabels,
   actions,
-  onDelete,
+  endpoint,
+  resourceName,
 }) {
+  const [deletedIds, setDeletedIds] = useState(new Set());
+
   if (!data || data.length === 0) {
     return (
       <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -35,7 +40,8 @@ export default function DataTable({
   }
 
   const headers = columns || Object.keys(data[0]);
-  const showActions = actions || onDelete;
+  const showActions = actions || endpoint;
+  const visibleData = data.filter((row) => !deletedIds.has(row.id));
 
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -44,21 +50,21 @@ export default function DataTable({
           <tr>
             {headers.map((key) => (
               <th
-                className="px-4 py-3 text-left font-medium text-slate-600 text-xs uppercase tracking-wider"
+                className="px-2 py-2 text-left font-medium text-slate-600 text-xs uppercase tracking-wider sm:px-4 sm:py-3"
                 key={key}
               >
                 {headerLabels?.[key] || key}
               </th>
             ))}
             {showActions && (
-              <th className="px-4 py-3 text-left font-medium text-slate-600 text-xs uppercase tracking-wider">
+              <th className="px-2 py-2 text-left font-medium text-slate-600 text-xs uppercase tracking-wider sm:px-4 sm:py-3">
                 Thao tác
               </th>
             )}
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200">
-          {data.map((row, index) => (
+          {visibleData.map((row, index) => (
             <tr
               className="transition-colors hover:bg-slate-50"
               key={row.id || index}
@@ -69,7 +75,7 @@ export default function DataTable({
                 const isImage = key === "imageUrl" && value;
                 return (
                   <td
-                    className="whitespace-nowrap px-4 py-3 text-slate-900 text-sm"
+                    className="whitespace-nowrap px-2 py-2 text-slate-900 text-xs sm:px-4 sm:py-3 sm:text-sm"
                     key={key}
                   >
                     {isImage ? (
@@ -89,7 +95,7 @@ export default function DataTable({
                 );
               })}
               {showActions && (
-                <td className="whitespace-nowrap px-4 py-3 text-sm">
+                <td className="whitespace-nowrap px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-sm">
                   <div className="flex items-center gap-1">
                     {actions?.map((action) => (
                       <Link
@@ -100,14 +106,22 @@ export default function DataTable({
                         <Pencil size={16} />
                       </Link>
                     ))}
-                    {onDelete && (
-                      <button
-                        className="rounded p-1.5 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600"
-                        onClick={() => onDelete(row)}
-                        type="button"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                    {endpoint && (
+                      <DeleteBtn
+                        endpoint={endpoint}
+                        id={row.id}
+                        onOptimisticDelete={(id) =>
+                          setDeletedIds((prev) => new Set([...prev, id]))
+                        }
+                        onRollback={(id) =>
+                          setDeletedIds((prev) => {
+                            const next = new Set(prev);
+                            next.delete(id);
+                            return next;
+                          })
+                        }
+                        resourceName={resourceName}
+                      />
                     )}
                   </div>
                 </td>

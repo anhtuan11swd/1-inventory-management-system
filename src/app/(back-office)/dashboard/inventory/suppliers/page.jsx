@@ -27,6 +27,7 @@ export default async function SuppliersPage() {
           ]}
           columns={["title", "supplierCode", "phone", "email", "address"]}
           data={suppliers}
+          endpoint="suppliers"
           headerLabels={{
             address: "Địa chỉ",
             email: "Email",
@@ -34,6 +35,7 @@ export default async function SuppliersPage() {
             supplierCode: "Mã NCC",
             title: "Tên nhà cung cấp",
           }}
+          resourceName="nhà cung cấp"
         />
       </div>
     </div>

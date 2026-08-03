@@ -27,11 +27,13 @@ export default async function UnitsPage() {
           ]}
           columns={["title", "abbreviation", "createdAt"]}
           data={units}
+          endpoint="units"
           headerLabels={{
             abbreviation: "Viết tắt",
             createdAt: "Ngày tạo",
             title: "Tên đơn vị",
           }}
+          resourceName="đơn vị tính"
         />
       </div>
     </div>

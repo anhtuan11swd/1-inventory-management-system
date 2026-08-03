@@ -41,3 +41,19 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }
 }
+
+export async function DELETE(_request, { params }) {
+  try {
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json({ error: "ID là bắt buộc" }, { status: 400 });
+    }
+
+    await db.unit.delete({ where: { id } });
+
+    return NextResponse.json({ message: "Đơn vị tính đã xóa thành công" });
+  } catch (_error) {
+    return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
+  }
+}

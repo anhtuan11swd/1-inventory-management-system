@@ -41,13 +41,13 @@ export default function SalesOverview() {
         <DashboardBanner onClose={() => setBannerHidden(true)} />
       )}
 
-      <div className="mt-6 rounded-lg bg-blue-50 py-8">
-        <div className="grid grid-cols-12 gap-6 px-8">
+      <div className="mt-6 rounded-lg bg-blue-50 py-4 sm:py-8">
+        <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-12 sm:gap-6 sm:px-8">
           <div className="col-span-12 sm:col-span-8">
-            <h2 className="mb-6 font-semibold text-slate-900 text-xl">
+            <h2 className="mb-4 font-semibold text-lg text-slate-900 sm:mb-6 sm:text-xl">
               Hoạt động bán hàng
             </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
               {SALES_ACTIVITY.map((item) => (
                 <SalesActivityCard item={item} key={item.title} />
               ))}
@@ -55,10 +55,10 @@ export default function SalesOverview() {
           </div>
 
           <div className="col-span-12 sm:col-span-4">
-            <h2 className="mb-6 font-semibold text-slate-900 text-xl">
+            <h2 className="mb-4 font-semibold text-lg text-slate-900 sm:mb-6 sm:text-xl">
               Tóm tắt kho hàng
             </h2>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2 sm:gap-3">
               {INVENTORY_SUMMARY.map((item) => (
                 <InventorySummaryCard item={item} key={item.title} />
               ))}

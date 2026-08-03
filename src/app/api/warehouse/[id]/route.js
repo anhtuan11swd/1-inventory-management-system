@@ -46,3 +46,19 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }
 }
+
+export async function DELETE(_request, { params }) {
+  try {
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json({ error: "ID là bắt buộc" }, { status: 400 });
+    }
+
+    await db.warehouse.delete({ where: { id } });
+
+    return NextResponse.json({ message: "Kho hàng đã xóa thành công" });
+  } catch (_error) {
+    return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
+  }
+}

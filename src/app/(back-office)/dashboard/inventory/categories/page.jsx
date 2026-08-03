@@ -27,7 +27,9 @@ export default async function CategoriesPage() {
           ]}
           columns={["title", "description"]}
           data={categories}
+          endpoint="categories"
           headerLabels={{ description: "Mô tả", title: "Tên danh mục" }}
+          resourceName="danh mục"
         />
       </div>
     </div>

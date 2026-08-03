@@ -34,12 +34,14 @@ export default async function WarehousePage() {
           ]}
           columns={["title", "location", "warehouseType", "createdAt"]}
           data={resolvedWarehouses}
+          endpoint="warehouse"
           headerLabels={{
             createdAt: "Ngày tạo",
             location: "Vị trí",
             title: "Tên kho",
             warehouseType: "Loại kho",
           }}
+          resourceName="kho hàng"
         />
       </div>
     </div>
