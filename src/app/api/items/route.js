@@ -1,54 +1,55 @@
 import { NextResponse } from "next/server";
+import { itemSchema } from "@/lib/validations";
+import { db } from "@/libs/db";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const {
-      barcode,
-      brandId,
-      buyingPrice,
-      categoryId,
-      description,
-      dimensions,
-      imageUrl,
-      notes,
-      quantity,
-      reorderPoint,
-      sellingPrice,
-      sku,
-      supplierId,
-      taxRate,
-      title,
-      unitId,
-      warehouseId,
-      weight,
-    } = body;
+    const result = itemSchema.safeParse(body);
 
-    return NextResponse.json(
-      {
-        barcode,
-        brandId,
-        buyingPrice: buyingPrice ? Number(buyingPrice) : null,
-        categoryId,
-        createdAt: new Date().toISOString(),
-        description,
-        dimensions: dimensions || null,
-        id: Date.now(),
-        imageUrl: imageUrl || null,
-        notes,
-        quantity: quantity ? Number(quantity) : null,
-        reorderPoint: reorderPoint ? Number(reorderPoint) : null,
-        sellingPrice: sellingPrice ? Number(sellingPrice) : null,
-        sku,
-        supplierId,
-        taxRate: taxRate ? Number(taxRate) : null,
-        title,
-        unitId,
-        warehouseId,
-        weight: weight ? Number(weight) : null,
+    if (!result.success) {
+      return NextResponse.json(
+        { details: result.error.flatten(), error: "Dữ liệu không hợp lệ" },
+        { status: 400 },
+      );
+    }
+
+    const data = result.data;
+    const item = await db.item.create({
+      data: {
+        barcode: data.barcode || null,
+        brandId: data.brandId,
+        buyingPrice: data.buyingPrice,
+        categoryId: data.categoryId,
+        description: data.description || null,
+        dimensions: data.dimensions || null,
+        imageUrl: data.imageUrl || null,
+        notes: data.notes || null,
+        quantity: data.quantity ?? null,
+        reorderPoint: data.reorderPoint ?? null,
+        sellingPrice: data.sellingPrice,
+        sku: data.sku || null,
+        taxRate: data.taxRate ?? null,
+        title: data.title,
+        unitId: data.unitId,
+        weight: data.weight ?? null,
       },
-      { status: 201 },
-    );
+    });
+
+    return NextResponse.json(item, { status: 201 });
+  } catch (_error) {
+    return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const items = await db.item.findMany({
+      include: { brand: true, category: true, unit: true },
+      orderBy: { id: "desc" },
+    });
+
+    return NextResponse.json(items);
   } catch (_error) {
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }

@@ -1,11 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import Breadcrumbs from "@/components/dashboard/Breadcrumbs";
 import FormHeader from "@/components/dashboard/FormHeader";
 import SubmitButton from "@/components/form-inputs/SubmitButton";
 import TextInput from "@/components/form-inputs/TextInput";
+import { brandSchema } from "@/lib/validations";
 
 export default function NewBrandPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +17,9 @@ export default function NewBrandPage() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(brandSchema),
+  });
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -26,6 +31,7 @@ export default function NewBrandPage() {
       });
       if (res.ok) {
         reset();
+        toast.success("Tạo thương hiệu thành công");
       }
     } catch (error) {
       console.error(error);

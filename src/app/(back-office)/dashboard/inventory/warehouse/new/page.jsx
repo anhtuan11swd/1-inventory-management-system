@@ -1,13 +1,16 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import Breadcrumbs from "@/components/dashboard/Breadcrumbs";
 import FormHeader from "@/components/dashboard/FormHeader";
 import SelectInput from "@/components/form-inputs/SelectInput";
 import SubmitButton from "@/components/form-inputs/SubmitButton";
 import TextAreaInput from "@/components/form-inputs/TextAreaInput";
 import TextInput from "@/components/form-inputs/TextInput";
+import { warehouseSchema } from "@/lib/validations";
 
 const WAREHOUSE_TYPE_OPTIONS = [
   { label: "Chính", value: "main" },
@@ -21,7 +24,9 @@ export default function NewWarehousePage() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(warehouseSchema),
+  });
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -33,6 +38,7 @@ export default function NewWarehousePage() {
       });
       if (res.ok) {
         reset();
+        toast.success("Tạo kho hàng thành công");
       }
     } catch (error) {
       console.error(error);

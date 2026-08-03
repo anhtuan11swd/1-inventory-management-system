@@ -1,7 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import Breadcrumbs from "@/components/dashboard/Breadcrumbs";
 import FormHeader from "@/components/dashboard/FormHeader";
 import ImageInput from "@/components/form-inputs/ImageInput";
@@ -10,6 +12,7 @@ import SubmitButton from "@/components/form-inputs/SubmitButton";
 import TextAreaInput from "@/components/form-inputs/TextAreaInput";
 import TextInput from "@/components/form-inputs/TextInput";
 import { useUploadThing } from "@/lib/uploadthing";
+import { itemSchema } from "@/lib/validations";
 
 const CATEGORY_OPTIONS = [
   { label: "Điện tử", value: "1" },
@@ -48,7 +51,9 @@ export default function NewItemPage() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(itemSchema),
+  });
 
   const { startUpload } = useUploadThing("imageUploader", {
     onClientUploadComplete: () => {},
@@ -76,6 +81,7 @@ export default function NewItemPage() {
       if (res.ok) {
         reset();
         setImageFile(null);
+        toast.success("Tạo mặt hàng thành công");
       }
     } catch (error) {
       console.error(error);

@@ -1,19 +1,37 @@
 import { NextResponse } from "next/server";
+import { categorySchema } from "@/lib/validations";
+import { db } from "@/libs/db";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { title, description } = body;
+    const result = categorySchema.safeParse(body);
 
-    return NextResponse.json(
-      {
-        createdAt: new Date().toISOString(),
-        description,
-        id: Date.now(),
-        title,
-      },
-      { status: 201 },
-    );
+    if (!result.success) {
+      return NextResponse.json(
+        { details: result.error.flatten(), error: "Dữ liệu không hợp lệ" },
+        { status: 400 },
+      );
+    }
+
+    const { title, description } = result.data;
+    const category = await db.category.create({
+      data: { description: description || null, title },
+    });
+
+    return NextResponse.json(category, { status: 201 });
+  } catch (_error) {
+    return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const categories = await db.category.findMany({
+      orderBy: { id: "desc" },
+    });
+
+    return NextResponse.json(categories);
   } catch (_error) {
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }

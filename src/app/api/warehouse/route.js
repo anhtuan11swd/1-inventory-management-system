@@ -1,21 +1,42 @@
 import { NextResponse } from "next/server";
+import { warehouseSchema } from "@/lib/validations";
+import { db } from "@/libs/db";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { title, location, description, type } = body;
+    const result = warehouseSchema.safeParse(body);
 
-    return NextResponse.json(
-      {
-        createdAt: new Date().toISOString(),
-        description,
-        id: Date.now(),
+    if (!result.success) {
+      return NextResponse.json(
+        { details: result.error.flatten(), error: "Dữ liệu không hợp lệ" },
+        { status: 400 },
+      );
+    }
+
+    const { title, location, description, type } = result.data;
+    const warehouse = await db.warehouse.create({
+      data: {
+        description: description || null,
         location,
         title,
-        type,
+        warehouseType: type,
       },
-      { status: 201 },
-    );
+    });
+
+    return NextResponse.json(warehouse, { status: 201 });
+  } catch (_error) {
+    return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const warehouses = await db.warehouse.findMany({
+      orderBy: { id: "desc" },
+    });
+
+    return NextResponse.json(warehouses);
   } catch (_error) {
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }

@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  items       Item[]
+}
+
+model Brand {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  items Item[]
+}
+
+model Unit {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  abbreviation String
+  items        Item[]
+}
+
+model Warehouse {
+  id                     String                     @id @default(auto()) @map("_id") @db.ObjectId
+  title                  String
+  location               String
+  warehouseType          String
+  description            String?
+  addStockAdjustments    AddStockAdjustment[]
+  transferStockAdjustmentsFrom TransferStockAdjustment[] @relation("FromWarehouse")
+  transferStockAdjustmentsTo   TransferStockAdjustment[] @relation("ToWarehouse")
+}
+
+model Item {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  imageUrl    String?
+  sku         String?
+  barcode     String?
+  quantity    Float?
+  weight      Float?
+  dimensions  String?
+  taxRate     Float?
+  notes       String?
+  sellingPrice Float
+  buyingPrice  Float
+  reorderPoint Float?
+  categoryId  String   @db.ObjectId
+  category    Category @relation(fields: [categoryId], references: [id])
+  unitId      String   @db.ObjectId
+  unit        Unit     @relation(fields: [unitId], references: [id])
+  brandId     String   @db.ObjectId
+  brand       Brand    @relation(fields: [brandId], references: [id])
+}
+
+model AddStockAdjustment {
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  stockQuantity         Float
+  warehouseId           String    @db.ObjectId
+  warehouse             Warehouse @relation(fields: [warehouseId], references: [id])
+  referenceNumber       String?
+  notes                 String?
+  createdAt             DateTime  @default(now())
+}
+
+model TransferStockAdjustment {
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  stockQuantity         Float
+  fromWarehouseId       String    @db.ObjectId
+  fromWarehouse         Warehouse @relation("FromWarehouse", fields: [fromWarehouseId], references: [id])
+  toWarehouseId         String    @db.ObjectId
+  toWarehouse           Warehouse @relation("ToWarehouse", fields: [toWarehouseId], references: [id])
+  referenceNumber       String?
+  notes                 String?
+  createdAt             DateTime  @default(now())
+}
