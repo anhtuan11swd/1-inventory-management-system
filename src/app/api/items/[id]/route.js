@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/requireAuth";
 import { itemSchema } from "@/lib/validations";
 import { db } from "@/libs/db";
 
 export async function GET(_request, { params }) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const { id } = await params;
     const item = await db.item.findUnique({
       include: {
@@ -28,6 +35,12 @@ export async function GET(_request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const { id } = await params;
     const body = await request.json();
     const result = itemSchema.safeParse(body);
@@ -78,6 +91,12 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(_request, { params }) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const { id } = await params;
 
     if (!id) {

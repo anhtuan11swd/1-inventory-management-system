@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/requireAuth";
 import { warehouseSchema } from "@/lib/validations";
 import { db } from "@/libs/db";
 
 export async function POST(request) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const body = await request.json();
     const result = warehouseSchema.safeParse(body);
 
@@ -32,6 +39,12 @@ export async function POST(request) {
 
 export async function GET() {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const warehouses = await db.warehouse.findMany({
       orderBy: { createdAt: "desc" },
     });

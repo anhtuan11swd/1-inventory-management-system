@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/requireAuth";
 import { unitSchema } from "@/lib/validations";
 import { db } from "@/libs/db";
 
 export async function POST(request) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const body = await request.json();
     const result = unitSchema.safeParse(body);
 
@@ -27,6 +34,12 @@ export async function POST(request) {
 
 export async function GET() {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const units = await db.unit.findMany({
       orderBy: { createdAt: "desc" },
     });

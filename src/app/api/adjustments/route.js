@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/requireAuth";
 
 const MOCK_ADJUSTMENTS = [
   {
@@ -28,11 +29,23 @@ const MOCK_ADJUSTMENTS = [
 ];
 
 export async function GET() {
+  const unauthorized = await requireAuth();
+
+  if (unauthorized) {
+    return unauthorized;
+  }
+
   return NextResponse.json(MOCK_ADJUSTMENTS);
 }
 
 export async function POST(request) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const body = await request.json();
     const { transferStockQty, receivingBranchId, notes } = body;
 

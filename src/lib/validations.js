@@ -106,3 +106,56 @@ export const transferStockSchema = z.object({
     .number({ invalid_type_error: "Số lượng phải là số" })
     .min(1, "Số lượng phải lớn hơn 0"),
 });
+
+const namePattern = /^[\p{L}\p{M}\p{Z}.'’-]+$/u;
+const passwordPattern =
+  /^(?!.*\s)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{8,64}$/;
+
+export const userSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email là bắt buộc")
+    .email("Email không hợp lệ")
+    .max(254, "Email không được vượt quá 254 ký tự"),
+  name: z
+    .string()
+    .trim()
+    .min(2, "Tên phải có ít nhất 2 ký tự")
+    .max(100, "Tên không được vượt quá 100 ký tự")
+    .regex(
+      namePattern,
+      "Tên chỉ được chứa chữ cái, dấu cách, gạch nối (-), dấu nháy ('), dấu chấm (.) và dấu cách đơn",
+    )
+    .refine(
+      (value) => /\p{L}/u.test(value),
+      "Tên phải chứa ít nhất một chữ cái",
+    )
+    .transform((value) => value.replace(/\s+/g, " ")),
+  password: z
+    .string()
+    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+    .max(64, "Mật khẩu không được vượt quá 64 ký tự")
+    .regex(
+      passwordPattern,
+      "Mật khẩu phải có ít nhất 1 chữ thường, 1 chữ hoa, 1 chữ số, 1 ký tự đặc biệt và không chứa khoảng trắng",
+    ),
+});
+
+export const registerSchema = userSchema
+  .extend({
+    confirmPassword: z.string().min(1, "Xác nhận mật khẩu là bắt buộc"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Xác nhận mật khẩu không khớp",
+    path: ["confirmPassword"],
+  });
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email là bắt buộc")
+    .email("Email không hợp lệ"),
+  password: z.string().min(1, "Mật khẩu là bắt buộc"),
+});

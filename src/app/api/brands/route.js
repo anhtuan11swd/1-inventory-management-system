@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/requireAuth";
 import { brandSchema } from "@/lib/validations";
 import { db } from "@/libs/db";
 
 export async function POST(request) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const body = await request.json();
     const result = brandSchema.safeParse(body);
 
@@ -27,6 +34,12 @@ export async function POST(request) {
 
 export async function GET() {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const brands = await db.brand.findMany({
       orderBy: { createdAt: "desc" },
     });

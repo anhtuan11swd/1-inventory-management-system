@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/requireAuth";
 import { addStockSchema } from "@/lib/validations";
 import { db } from "@/libs/db";
 
 export async function POST(request) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const body = await request.json();
     const result = addStockSchema.safeParse(body);
 
@@ -71,6 +78,12 @@ export async function POST(request) {
 
 export async function GET() {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const adjustments = await db.addStockAdjustment.findMany({
       orderBy: { createdAt: "desc" },
     });

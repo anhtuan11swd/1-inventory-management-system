@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
+import { requireAuth } from "@/lib/requireAuth";
 import { db } from "@/libs/db";
 
 export async function DELETE(_request, { params }) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const { id } = await params;
 
     if (!id) {

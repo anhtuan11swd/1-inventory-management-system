@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { UTApi } from "uploadthing/server";
+import { requireAuth } from "@/lib/requireAuth";
 
 const utapi = new UTApi();
 
@@ -10,6 +11,12 @@ function extractFileKey(url) {
 
 export async function POST(request) {
   try {
+    const unauthorized = await requireAuth();
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     const { url } = await request.json();
 
     if (!url) {
