@@ -29,9 +29,9 @@ export default async function ItemsPage() {
             "imageUrl",
             "title",
             "category.title",
-            "sellingPrice",
-            "buyingPrice",
+            "warehouse.title",
             "quantity",
+            "buyingPrice",
             "createdAt",
             "updatedAt",
           ]}
@@ -43,9 +43,9 @@ export default async function ItemsPage() {
             createdAt: "Ngày tạo",
             imageUrl: "Ảnh",
             quantity: "Số lượng",
-            sellingPrice: "Giá bán",
             title: "Tên mặt hàng",
             updatedAt: "Cập nhật",
+            "warehouse.title": "Kho hàng",
           }}
           resourceName="hàng hóa"
         />

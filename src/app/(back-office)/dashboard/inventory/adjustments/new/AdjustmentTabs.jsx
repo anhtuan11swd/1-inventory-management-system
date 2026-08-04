@@ -10,7 +10,7 @@ const TABS = [
   { icon: Minus, key: "transfer", label: "Chuyển kho" },
 ];
 
-export default function AdjustmentTabs({ items, warehouses }) {
+export default function AdjustmentTabs({ items, suppliers, warehouses }) {
   const [activeForm, setActiveForm] = useState("add");
 
   return (
@@ -37,7 +37,12 @@ export default function AdjustmentTabs({ items, warehouses }) {
         })}
       </div>
 
-      <AdjustmentForm items={items} type={activeForm} warehouses={warehouses} />
+      <AdjustmentForm
+        items={items}
+        suppliers={suppliers}
+        type={activeForm}
+        warehouses={warehouses}
+      />
     </>
   );
 }

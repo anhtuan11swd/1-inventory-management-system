@@ -32,8 +32,8 @@ export default function DataTable({
   if (!data || data.length === 0) {
     return (
       <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-        <p className="px-4 py-8 text-center text-slate-500">
-          Không có dữ liệu.
+        <p className="bg-white py-4 text-center text-2xl text-slate-500">
+          Không có dữ liệu để hiển thị
         </p>
       </div>
     );
@@ -41,6 +41,7 @@ export default function DataTable({
 
   const headers = columns || Object.keys(data[0]);
   const showActions = actions || endpoint;
+  const isAdjustment = resourceName?.toLowerCase().includes("adjustment");
   const visibleData = data.filter((row) => !deletedIds.has(row.id));
 
   return (
@@ -97,15 +98,16 @@ export default function DataTable({
               {showActions && (
                 <td className="whitespace-nowrap px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-sm">
                   <div className="flex items-center gap-1">
-                    {actions?.map((action) => (
-                      <Link
-                        className="rounded p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-blue-600"
-                        href={resolveHref(action.href, row)}
-                        key={action.label}
-                      >
-                        <Pencil size={16} />
-                      </Link>
-                    ))}
+                    {!isAdjustment &&
+                      actions?.map((action) => (
+                        <Link
+                          className="rounded p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-blue-600"
+                          href={resolveHref(action.href, row)}
+                          key={action.label}
+                        >
+                          <Pencil size={16} />
+                        </Link>
+                      ))}
                     {endpoint && (
                       <DeleteBtn
                         endpoint={endpoint}

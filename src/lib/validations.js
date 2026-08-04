@@ -93,6 +93,7 @@ export const addStockSchema = z.object({
   notes: z.string().optional(),
   receivingWarehouseId: z.string().min(1, "Kho nhận là bắt buộc"),
   referenceNumber: z.string().optional(),
+  supplierId: z.string().optional(),
 });
 
 export const transferStockSchema = z.object({

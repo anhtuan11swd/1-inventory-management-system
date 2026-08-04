@@ -6,7 +6,13 @@ export async function GET(_request, { params }) {
   try {
     const { id } = await params;
     const item = await db.item.findUnique({
-      include: { brand: true, category: true, supplier: true, unit: true },
+      include: {
+        brand: true,
+        category: true,
+        supplier: true,
+        unit: true,
+        warehouse: true,
+      },
       where: { id },
     });
 
@@ -58,6 +64,7 @@ export async function PUT(request, { params }) {
         taxRate: data.taxRate ?? null,
         title: data.title,
         unitId: data.unitId,
+        warehouseId: data.warehouseId || null,
         weight: data.weight ?? null,
       },
       where: { id },

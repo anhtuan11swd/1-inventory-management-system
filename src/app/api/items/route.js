@@ -15,6 +15,24 @@ export async function POST(request) {
     }
 
     const data = result.data;
+
+    if (data.warehouseId) {
+      const warehouse = await db.warehouse.findUnique({
+        where: { id: data.warehouseId },
+      });
+
+      if (warehouse) {
+        const newStock =
+          Number.parseInt(warehouse.stockQuantity ?? 0, 10) +
+          Number.parseInt(data.quantity ?? 0, 10);
+
+        await db.warehouse.update({
+          data: { stockQuantity: newStock },
+          where: { id: data.warehouseId },
+        });
+      }
+    }
+
     const item = await db.item.create({
       data: {
         barcode: data.barcode || null,
@@ -29,9 +47,11 @@ export async function POST(request) {
         reorderPoint: data.reorderPoint ?? null,
         sellingPrice: data.sellingPrice,
         sku: data.sku || null,
+        supplierId: data.supplierId || null,
         taxRate: data.taxRate ?? null,
         title: data.title,
         unitId: data.unitId,
+        warehouseId: data.warehouseId || null,
         weight: data.weight ?? null,
       },
     });
@@ -45,7 +65,13 @@ export async function POST(request) {
 export async function GET() {
   try {
     const items = await db.item.findMany({
-      include: { brand: true, category: true, supplier: true, unit: true },
+      include: {
+        brand: true,
+        category: true,
+        supplier: true,
+        unit: true,
+        warehouse: true,
+      },
       orderBy: { createdAt: "desc" },
     });
 

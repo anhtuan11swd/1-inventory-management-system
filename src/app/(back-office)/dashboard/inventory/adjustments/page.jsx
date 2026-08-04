@@ -4,26 +4,10 @@ import FixedHeader from "@/components/dashboard/FixedHeader";
 import { getData } from "@/lib/getData";
 
 export default async function AdjustmentsPage() {
-  const [addAdjustments, transferAdjustments, warehouses] = await Promise.all([
+  const [addAdjustments, transferAdjustments] = await Promise.all([
     getData("/api/adjustments/add"),
     getData("/api/adjustments/transfer"),
-    getData("/api/warehouse"),
   ]);
-
-  const warehouseMap = Object.fromEntries(
-    warehouses.map((w) => [w.id, w.title]),
-  );
-
-  const resolvedAdd = addAdjustments.map((a) => ({
-    ...a,
-    warehouseId: warehouseMap[a.warehouseId] || a.warehouseId,
-  }));
-
-  const resolvedTransfer = transferAdjustments.map((a) => ({
-    ...a,
-    fromWarehouseId: warehouseMap[a.fromWarehouseId] || a.fromWarehouseId,
-    toWarehouseId: warehouseMap[a.toWarehouseId] || a.toWarehouseId,
-  }));
 
   return (
     <div>
@@ -43,19 +27,21 @@ export default async function AdjustmentsPage() {
           <DataTable
             columns={[
               "stockQuantity",
-              "warehouseId",
+              "warehouseName",
               "referenceNumber",
               "notes",
               "createdAt",
             ]}
-            data={resolvedAdd}
+            data={addAdjustments}
+            endpoint="adjustments/add"
             headerLabels={{
               createdAt: "Ngày tạo",
               notes: "Ghi chú",
               referenceNumber: "Số tham chiếu",
               stockQuantity: "Số lượng",
-              warehouseId: "Kho nhận",
+              warehouseName: "Kho nhận",
             }}
+            resourceName="điều chỉnh nhập kho"
           />
         </div>
 
@@ -64,21 +50,23 @@ export default async function AdjustmentsPage() {
           <DataTable
             columns={[
               "stockQuantity",
-              "fromWarehouseId",
-              "toWarehouseId",
+              "fromWarehouseName",
+              "toWarehouseName",
               "referenceNumber",
               "notes",
               "createdAt",
             ]}
-            data={resolvedTransfer}
+            data={transferAdjustments}
+            endpoint="adjustments/transfer"
             headerLabels={{
               createdAt: "Ngày tạo",
-              fromWarehouseId: "Kho gửi",
+              fromWarehouseName: "Kho gửi",
               notes: "Ghi chú",
               referenceNumber: "Số tham chiếu",
               stockQuantity: "Số lượng",
-              toWarehouseId: "Kho nhận",
+              toWarehouseName: "Kho nhận",
             }}
+            resourceName="điều chỉnh chuyển kho"
           />
         </div>
       </div>

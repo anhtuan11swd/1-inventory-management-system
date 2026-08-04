@@ -23,6 +23,8 @@ export async function makePostRequest({
       if (router && redirectPath) {
         router.push(redirectPath);
       }
+    } else if (res.status === 409) {
+      toast.error("Kho gửi không đủ hàng");
     } else {
       const error = await res.json();
       toast.error(error.error || "Có lỗi xảy ra");

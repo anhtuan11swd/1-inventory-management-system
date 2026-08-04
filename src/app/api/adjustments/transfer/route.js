@@ -23,6 +23,45 @@ export async function POST(request) {
       itemId,
     } = result.data;
 
+    const transferQty = Number.parseInt(transferStockQuantity, 10);
+
+    const givingWarehouse = await db.warehouse.findUnique({
+      where: { id: givingWarehouseId },
+    });
+
+    if (
+      !givingWarehouse ||
+      Number.parseInt(givingWarehouse.stockQuantity ?? 0, 10) < transferQty
+    ) {
+      return NextResponse.json(
+        { error: "Kho gửi không đủ hàng" },
+        { status: 409 },
+      );
+    }
+
+    const newGivingStock =
+      Number.parseInt(givingWarehouse.stockQuantity ?? 0, 10) - transferQty;
+
+    await db.warehouse.update({
+      data: { stockQuantity: newGivingStock },
+      where: { id: givingWarehouseId },
+    });
+
+    const receivingWarehouse = await db.warehouse.findUnique({
+      where: { id: receivingWarehouseId },
+    });
+
+    if (receivingWarehouse) {
+      const newReceivingStock =
+        Number.parseInt(receivingWarehouse.stockQuantity ?? 0, 10) +
+        transferQty;
+
+      await db.warehouse.update({
+        data: { stockQuantity: newReceivingStock },
+        where: { id: receivingWarehouseId },
+      });
+    }
+
     const adjustment = await db.transferStockAdjustment.create({
       data: {
         fromWarehouseId: givingWarehouseId,
@@ -46,7 +85,30 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(adjustments);
+    const warehouseIds = [
+      ...new Set([
+        ...adjustments.map((a) => a.fromWarehouseId).filter(Boolean),
+        ...adjustments.map((a) => a.toWarehouseId).filter(Boolean),
+      ]),
+    ];
+
+    const warehouses = await db.warehouse.findMany({
+      select: { id: true, title: true },
+      where: { id: { in: warehouseIds } },
+    });
+
+    const warehouseMap = Object.fromEntries(
+      warehouses.map((w) => [w.id, w.title]),
+    );
+
+    const resolved = adjustments.map((a) => ({
+      ...a,
+      fromWarehouseName:
+        warehouseMap[a.fromWarehouseId] || "Không tìm thấy kho",
+      toWarehouseName: warehouseMap[a.toWarehouseId] || "Không tìm thấy kho",
+    }));
+
+    return NextResponse.json(resolved);
   } catch (_error) {
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }

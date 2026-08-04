@@ -4,9 +4,10 @@ import { getData } from "@/lib/getData";
 import AdjustmentTabs from "./AdjustmentTabs";
 
 export default async function NewAdjustmentPage() {
-  const [items, warehouses] = await Promise.all([
+  const [items, warehouses, suppliers] = await Promise.all([
     getData("/api/items"),
     getData("/api/warehouse"),
+    getData("/api/suppliers"),
   ]);
 
   return (
@@ -17,7 +18,11 @@ export default async function NewAdjustmentPage() {
           href="/dashboard/inventory/adjustments"
           title="Tạo điều chỉnh kho"
         />
-        <AdjustmentTabs items={items} warehouses={warehouses} />
+        <AdjustmentTabs
+          items={items}
+          suppliers={suppliers}
+          warehouses={warehouses}
+        />
       </div>
     </div>
   );

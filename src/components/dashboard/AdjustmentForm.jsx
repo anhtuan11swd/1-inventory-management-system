@@ -11,7 +11,7 @@ import TextAreaInput from "@/components/form-inputs/TextAreaInput";
 import TextInput from "@/components/form-inputs/TextInput";
 import { addStockSchema, transferStockSchema } from "@/lib/validations";
 
-export default function AdjustmentForm({ type, items, warehouses }) {
+export default function AdjustmentForm({ items, suppliers, type, warehouses }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const schema = type === "add" ? addStockSchema : transferStockSchema;
@@ -33,6 +33,10 @@ export default function AdjustmentForm({ type, items, warehouses }) {
     label: w.title,
     value: w.id,
   }));
+  const supplierOptions = suppliers.map((s) => ({
+    label: s.title,
+    value: s.id,
+  }));
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -50,9 +54,15 @@ export default function AdjustmentForm({ type, items, warehouses }) {
         toast.success(
           type === "add" ? "Thêm kho thành công" : "Chuyển kho thành công",
         );
+      } else if (res.status === 409) {
+        toast.error("Kho gửi không đủ hàng");
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Có lỗi xảy ra");
       }
     } catch (error) {
       console.error(error);
+      toast.error("Có lỗi xảy ra");
     } finally {
       setIsLoading(false);
     }
@@ -107,6 +117,18 @@ export default function AdjustmentForm({ type, items, warehouses }) {
           options={warehouseOptions}
           register={register}
         />
+
+        {type === "add" && (
+          <SelectInput
+            defaultValue=""
+            disabled={isLoading}
+            errors={errors}
+            label="Nhà cung cấp"
+            name="supplierId"
+            options={supplierOptions}
+            register={register}
+          />
+        )}
 
         <TextInput
           disabled={isLoading}

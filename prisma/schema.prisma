@@ -35,77 +35,94 @@ model Unit {
 }
 
 model Supplier {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  phone         String?
-  email         String?
-  address       String?
-  contactPerson String?
-  supplierCode  String?
-  paymentTerms  String?
-  taxId         String?
-  notes         String?
-  items         Item[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  title               String
+  phone               String?
+  email               String?
+  address             String?
+  contactPerson       String?
+  supplierCode        String?
+  paymentTerms        String?
+  taxId               String?
+  notes               String?
+  items               Item[]
+  addStockAdjustments AddStockAdjustment[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 }
 
 model Warehouse {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  location      String
-  warehouseType String
-  description   String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                   String                  @id @default(auto()) @map("_id") @db.ObjectId
+  title                String
+  location             String
+  warehouseType        String
+  description          String?
+  stockQuantity        Int                     @default(0)
+  items                Item[]
+  addStockAdjustments  AddStockAdjustment[]
+  fromTransfers        TransferStockAdjustment[] @relation("TransferFromWarehouse")
+  toTransfers          TransferStockAdjustment[] @relation("TransferToWarehouse")
+  createdAt            DateTime                @default(now())
+  updatedAt            DateTime                @updatedAt
 }
 
 model Item {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  description  String?
-  imageUrl     String?
-  sku          String?
-  barcode      String?
-  quantity     Float?
-  weight       Float?
-  dimensions   String?
-  taxRate      Float?
-  notes        String?
-  sellingPrice Float
-  buyingPrice  Float
-  reorderPoint Float?
-  categoryId   String    @db.ObjectId
-  category     Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  unitId       String    @db.ObjectId
-  unit         Unit      @relation(fields: [unitId], references: [id])
-  brandId      String    @db.ObjectId
-  brand        Brand     @relation(fields: [brandId], references: [id])
-  supplierId   String?
-  supplier     Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                       String                   @id @default(auto()) @map("_id") @db.ObjectId
+  title                    String
+  description              String?
+  imageUrl                 String?
+  sku                      String?
+  barcode                  String?
+  quantity                 Float?
+  weight                   Float?
+  dimensions               String?
+  taxRate                  Float?
+  notes                    String?
+  sellingPrice             Float
+  buyingPrice              Float
+  reorderPoint             Float?
+  categoryId               String                   @db.ObjectId
+  category                 Category                 @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  unitId                   String                   @db.ObjectId
+  unit                     Unit                     @relation(fields: [unitId], references: [id])
+  brandId                  String                   @db.ObjectId
+  brand                    Brand                    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  supplierId               String?
+  supplier                 Supplier?                @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  warehouseId              String?                  @db.ObjectId
+  warehouse                Warehouse?               @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  addStockAdjustments      AddStockAdjustment[]
+  transferStockAdjustments TransferStockAdjustment[]
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
 }
 
 model AddStockAdjustment {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  stockQuantity     Float
-  warehouseId       String
-  referenceNumber   String?
-  notes             String?
-  itemId            String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  stockQuantity    Float
+  warehouseId      String    @db.ObjectId
+  warehouse        Warehouse @relation(fields: [warehouseId], references: [id])
+  referenceNumber  String?
+  notes            String?
+  itemId           String?   @db.ObjectId
+  item             Item?     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  supplierId       String?   @db.ObjectId
+  supplier         Supplier? @relation(fields: [supplierId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model TransferStockAdjustment {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  stockQuantity     Float
-  fromWarehouseId   String
-  toWarehouseId     String
-  referenceNumber   String?
-  notes             String?
-  itemId            String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  stockQuantity    Float
+  fromWarehouseId  String    @db.ObjectId
+  fromWarehouse    Warehouse @relation("TransferFromWarehouse", fields: [fromWarehouseId], references: [id])
+  toWarehouseId    String    @db.ObjectId
+  toWarehouse      Warehouse @relation("TransferToWarehouse", fields: [toWarehouseId], references: [id])
+  referenceNumber  String?
+  notes            String?
+  itemId           String?   @db.ObjectId
+  item             Item?     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
