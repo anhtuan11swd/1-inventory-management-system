@@ -46,6 +46,18 @@ export async function GET() {
     }
 
     const warehouses = await db.warehouse.findMany({
+      include: {
+        items: {
+          select: {
+            buyingPrice: true,
+            id: true,
+            imageUrl: true,
+            quantity: true,
+            sellingPrice: true,
+            title: true,
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     });
 
